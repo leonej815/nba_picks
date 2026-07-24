@@ -1,0 +1,6 @@
+__pycache__/
+venv/
+data.db-*
+.env
+data_test.sqlite*
+data_test.csv

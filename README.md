@@ -7,7 +7,7 @@ This project is a DASH web app that scrapes NBA stats, scores and lines from the
 * app.py is the web application file. It loads the model and the games for the current data and displays the models pick and confidence level at various lines in case the line moves.
 
 ## Deployment
-* The app is currently hosted at https://nba-picks.onrender.com/
+* The app is currently hosted at https://nba-picks-4r5x.onrender.com
 * Automated Data Pipeline: A GitHub Actions workflow is configured to trigger run_daily.py every morning. The screener gets lines and stats for the current days games and updates the scores for any previous days where they are needed. The data is stored in the sqlite database.
 
 ## Tech Stack

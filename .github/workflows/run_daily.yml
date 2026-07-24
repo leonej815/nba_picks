@@ -2,8 +2,8 @@ name: Daily Web Scraper
 
 on:
   schedule:
-    # this runs at 8:00 AM UTC (1:00 AM Eastern Time) every day
-    - cron: '0 8 * * 1-5'
+    # this runs at 8:00 AM UTC (1:00 AM Eastern Time), every day, from October through April
+    - cron: '0 8 * 10-4 *'
   workflow_dispatch: # this adds a "Run Now" button in GitHub for testing
 
 jobs:

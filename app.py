@@ -34,6 +34,7 @@ model_features = joblib.load("model/nba_spread_features.joblib")
 
 # create app with Cyborg theme and Bootstrap
 app = dash.Dash(__name__, title="NBA Spread Picks", external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP])
+server = app.server
 
 # app layout
 app.layout = dbc.Container([

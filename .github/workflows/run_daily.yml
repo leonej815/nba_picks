@@ -30,6 +30,7 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           git add sqlite/data.sqlite
+          git add csv/data.csv
           # the "|| exit 0" prevents the action from failing if no data changed
           git commit -m "Automated data update" || exit 0
           git push

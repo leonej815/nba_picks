@@ -122,7 +122,10 @@ def render_list(_):
     if len(game_rows) == 0:
         content = dbc.Card([
                 dbc.CardBody([
-                    html.H5(f"No NBA regular season games today or no picks to show."),
+                    html.H5(
+                        "No NBA regular season games today or no picks to show.",
+                        className="card-title text-info"
+                    ),
                 ])
             ], className="mb-3 bg-dark border-secondary")
     else:
@@ -132,5 +135,5 @@ def render_list(_):
 
     
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=False, host="0.0.0.0", port=8050)
 

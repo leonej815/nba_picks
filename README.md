@@ -3,7 +3,7 @@ This project is a DASH web app that scrapes NBA stats, scores and lines from the
 
 ## Core Functionality
 * create_model.py uses the stored data in the database to create a binary classification model to pick NBA games against the spread.
-* run_daily.py runs nba_screener every morning to collect the stats and update the scores of NBA games. The stats are based on the previous 10 games played.
+* Uses Github Actions to run nba_screener every morning to collect the stats and update the scores of NBA games. The stats are based on the previous 10 games played.
 * app.py is the web application file. It loads the model and the games for the current data and displays the models pick and confidence level at various lines in case the line moves.
 
 ## Deployment

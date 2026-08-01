@@ -1,8 +1,13 @@
 import sqlite3
 from pathlib import Path
+import os
 
 def main():
-    db_path = Path(__file__).resolve().parent.parent / "sqlite" / "data.sqlite"
+    # get db path depending on environment
+    if os.getenv("APP_ENV") == "development":
+        db_path = Path(__file__).resolve().parent.parent / "sqlite" / "data_test.sqlite"
+    else:
+        db_path = Path(__file__).resolve().parent.parent / "sqlite" / "data.sqlite"
 
     # make directory if it doesn't exist
     db_path.parent.mkdir(parents=True, exist_ok=True)

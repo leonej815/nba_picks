@@ -17,14 +17,17 @@ if str(root_dir) not in sys.path:
 from include.db import DB
 
 def nba_screener():
+    """This is a data pipeline that collects and updates scores for previous days, and collects line data and stats for the current day if needed. The database is updated with any changes and a csv file is created"""
+
     if os.getenv("APP_ENV") == "development":
         db_name = "data_test.sqlite"
         csv_name = "data_test.csv"
     else:
         db_name = "data.sqlite"
         csv_name = "data.csv"
-    db_path = Path(__file__).resolve().parent.parent/'sqlite'/db_name
+    db_path = Path(__file__).resolve().parent.parent/'sqlite'/db_name 
     csv_path = Path(__file__).resolve().parent.parent/'csv'/csv_name
+    
     date_today = get_date_str()
     # date_today = "20260224" # COMMENT OUT, JUST TESTING
     webdriver = get_webdriver()
@@ -53,6 +56,7 @@ def nba_screener():
 
 def get_webdriver():
     """Returns headless selenium webdriver object"""
+
     chrome_options = Options()
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox") # Essential for server environments
@@ -67,6 +71,7 @@ def get_date_str():
     returns:
         str: the date in the format yyyymmdd
     """
+
     tz = ZoneInfo('US/Eastern')
     today = datetime.now(tz)
     if today.hour < 4:

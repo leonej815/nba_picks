@@ -1,6 +1,14 @@
 from selenium.webdriver.common.by import By
 
 class EspnScoreboard:
+    """Class to manage the retrieval of data from the NBA scoreboard page at espn.com
+    Attributes:
+        TEAM_NAME_TO_SYMBOL (dict(str, str)): keys are team names and values are team abbreviations
+        MIN_GAME_COUNT (int): this is set to 10 since this program uses a rolling 10 game window of previous game stats
+        MAX_GAME_COUNT (int): this is set to 81 to avoid collecting data for playoff games
+        web_driver: selenium web driver object
+    """
+
     TEAM_NAME_TO_SYMBOL = {
         'celtics':'bos', 'warriors':'gs', 'cavaliers':'cle', 'grizzlies':'mem', 'nets':'bkn', 'lakers':'lal',
         'hawks':'atl', 'kings':'sac', 'bulls':'chi', 'nuggets':'den', 'magic':'orl', 'thunder':'okc',
@@ -12,15 +20,32 @@ class EspnScoreboard:
     MAX_GAME_COUNT = 81
             
     def __init__(self, web_driver):
+        """Creates web_driver attribute
+        Inputs:
+            selenium web driver object
+        """
+
         self.web_driver = web_driver
 
 
     def open_scoreboard(self, date):
+        """Uses webdriver to open the Espn NBA scoredboard page at given date
+        Inputs:
+            date (str): date string in the format yyyymmdd
+        """
+
         url = f"https://www.espn.com/nba/scoreboard/_/date/{date}"
         self.web_driver.get(url)
 
 
     def get_scores(self, date):
+        """Uses selenium web driver to open the NBA scoreboard at the given date and collect all the scores and store them in a list
+        Inputs:
+            date (str): date string with format yyyymmdd
+        Outputs:
+            list[dict(str, str)]: list containing dictionaries of score data with keys away, home, away_score, home_score
+        """
+
         team_selector = '.ScoreCell__TeamName.ScoreCell__TeamName--shortDisplayName'
         score_selector = '.ScoreCell__Score.ScoreCell_Score--scoreboard'
         scoreboard_selector = '.Scoreboard__RowContainer'
@@ -59,6 +84,13 @@ class EspnScoreboard:
 
 
     def get_line_data(self, date):
+        """Uses selenium web driver to open the NBA scoreboard at the given date and collect line data and store it in a list
+        Inputs:
+            date (str): date string with format yyyymmdd
+        Outputs:
+            list[dict(str, str)]: list containing dictionaries of score data with keys away, home, away_spread, home_spread, total_line
+        """
+
         scoreboard_selector = '.Scoreboard__RowContainer'
         team_selector = '.ScoreCell__TeamName.ScoreCell__TeamName--shortDisplayName'
         line_selector = '.rIczU.iygLn'
@@ -109,7 +141,7 @@ class EspnScoreboard:
             }
             game_data_arr.append(game_data)
 
-        return game_data_arr         
+        return game_data_arr  
 
 
         

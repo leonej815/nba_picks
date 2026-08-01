@@ -1,6 +1,11 @@
 from selenium.webdriver.common.by import By
 
 class NbaStats:
+    """Class that manages NBA team stats collecting from nba.com
+    Attributes:
+        web_driver: selenium web driver object
+    """
+
     def __init__(self, web_driver):
         self.web_driver = web_driver
 
@@ -8,8 +13,7 @@ class NbaStats:
     def get_stats(self):
         """Collects advanced stats for the last 10 games for all teams from NBA.com
         returns:
-            dict[dict]: Returns a nested dictionary where the parent dict key is the team name and the
-                keys for the child dict are the different stats
+            dict(str, dict(str, str)): Returns a nested dictionary where the parent dict keys are the team names and the keys the child dict conatins the different stat names mapped to their values
         """
         stats_url = 'https://www.nba.com/stats/teams/advanced?PerMode=PerGame&LastNGames=10'
         heading_selector = '.Crom_container__C45Ti.crom-container .Crom_table__p1iZz .Crom_headers__mzI_m th'

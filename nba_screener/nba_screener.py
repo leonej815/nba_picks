@@ -44,10 +44,12 @@ def nba_screener():
     # retrieve today's line data and either insert or update into the database
     line_data = espn.get_line_data(date_today)
     db.insert_line_data(date_today, line_data)
+    print(f"Line data:\n{line_data}\n\n")
 
     # get stats and update records that need stats for today's date
     stats_dict = nbaDotCom.get_stats()
     db.insert_stats(date_today, stats_dict)
+    print(f"Stats:\n{stats_dict}\n\n")
 
     # select all data and output to csv
     df = db.select_all_to_df()

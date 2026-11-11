@@ -1,4 +1,6 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class NbaStats:
     """Class that manages NBA team stats collecting from nba.com
@@ -16,29 +18,36 @@ class NbaStats:
             dict(str, dict(str, str)): Returns a nested dictionary where the parent dict keys are the team names and the keys the child dict conatins the different stat names mapped to their values
         """
         stats_url = 'https://www.nba.com/stats/teams/advanced?PerMode=PerGame&LastNGames=10'
-        heading_selector = '.Crom_container__C45Ti.crom-container .Crom_table__p1iZz .Crom_headers__mzI_m th'
-        row_selector = '.Crom_body__UYOcU tr'
+        heading_selector = 'div.crom-container table thead tr th'
+        row_selector = 'div.crom-container table tbody tr'
         value_selector = 'td'
 
+        # wait for table element to exist
         self.web_driver.get(stats_url)
+        WebDriverWait(self.web_driver, 15).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "table"))
+        )
 
         # extract table headings
         heading_els = self.web_driver.find_elements(By.CSS_SELECTOR, heading_selector)
-        row_els = self.web_driver.find_elements(By.CSS_SELECTOR, row_selector)
-
         headings = []
         for el in heading_els:
-            text = el.text.lower().replace('\n', '_')
-            headings.append(text)
+            text = el.text.lower().replace('\n', '_').strip()
+            if text == '':
+                continue
+            headings.append(text)        
+
+        # get table body row elements
+        row_els = self.web_driver.find_elements(By.CSS_SELECTOR, row_selector)
 
         # extract team stats
         stats = {}
         for el in row_els:
-            value_els = el.find_elements(By.CSS_SELECTOR, value_selector)
-            team_name = value_els[1].text.split(' ')[-1].lower()
+            value_els = el.find_elements(By.CSS_SELECTOR, value_selector)[1:] # remove first element of row
+            team_name = value_els[0].text.split(' ')[-1].lower()
 
             stats[team_name] = {}
-            for i in range(6, len(value_els) - 1):  # Skip unneeded columns
+            for i in range(5, len(value_els) - 1):  # skip unneeded columns
                 stats[team_name][headings[i]] = value_els[i].text
 
         return stats

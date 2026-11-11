@@ -55,14 +55,18 @@ def nba_screener():
 
 
 def get_webdriver():
-    """Returns headless selenium webdriver object"""
-
-    chrome_options = Options()
-    chrome_options.add_argument("--headless=new")
-    chrome_options.add_argument("--no-sandbox") # Essential for server environments
-    chrome_options.add_argument("--disable-dev-shm-usage")  # Overcomes limited resource errors
-    chrome_options.add_argument("--window-size=1920,1080")  # Ensures responsive sites load correctly
-    driver = webdriver.Chrome(options=chrome_options)
+    options = Options()
+    options.add_argument("--headless=new") # modern headless mode
+    options.add_argument("--disable-gpu") # in case Github Actions Linux machines don't have a GPU
+    options.add_argument("--no-sandbox") # essential for server environments
+    options.add_argument("--disable-dev-shm-usage") # overcomes limited resource errors
+    options.add_argument("--window-size=1920,1080") # ensures responsive sites load correctly
+    
+    # crucial flags to prevent Cloudflare/bot detection in headless mode:
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+    
+    driver = webdriver.Chrome(options=options)
     return driver
 
 

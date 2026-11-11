@@ -53,7 +53,7 @@ class EspnScoreboard:
 
         self.open_scoreboard(date)
 
-        scoreboard_els = self.driver.find_elements(By.CSS_SELECTOR, scoreboard_selector)
+        scoreboard_els = self.web_driver.find_elements(By.CSS_SELECTOR, scoreboard_selector)
 
         score_data = []
         for scoreboard_el in scoreboard_els:
@@ -127,6 +127,10 @@ class EspnScoreboard:
             favored_team_symbol = line_els[0].text.split(' ')[0].lower()
             spread = line_els[0].text.split(' ')[-1]
             total = line_els[1].text
+
+            # skip if spread is --
+            if spread == '--':
+                continue
 
             # determine spread for home and away teams
             home_spread = spread if favored_team_symbol == self.TEAM_NAME_TO_SYMBOL[home_team] else str(float(spread) * -1)

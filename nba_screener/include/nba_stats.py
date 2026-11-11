@@ -60,15 +60,10 @@ class NbaStats:
     """Class that manages NBA team stats collecting from NBA.com via direct API"""
 
     def __init__(self, web_driver=None):
-        # web_driver parameter kept for compatibility with existing instantiation in screener
         self.web_driver = web_driver
 
     def get_stats(self):
-        """Fetches advanced stats for the last 10 games directly from the NBA stats API.
-        Returns:
-            dict(str, dict(str, str)): Nested dictionary matching your required structure.
-        """
-        # API endpoint for Advanced team stats over the last 10 games
+        """Fetches advanced stats for the last 10 games directly from the NBA stats API."""
         api_url = (
             "https://stats.nba.com/stats/leaguedashteamstats?"
             "Conference=&DateFrom=&DateTo=&Division=&GameScope=&GameSegment="
@@ -79,18 +74,31 @@ class NbaStats:
             "&ShotClockRange=&StarterBench=&TeamID=0&VsConference=&VsDivision="
         )
 
+        # Full browser header profile to prevent connection drops/rate limiting
         headers = {
+            'Host': 'stats.nba.com',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-            'Referer': 'https://www.nba.com/',
+            'Accept': 'application/json, text/plain, */*',
             'Accept-Language': 'en-US,en;q=0.9',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Referer': 'https://www.nba.com/',
+            'Origin': 'https://www.nba.com',
             'x-nba-stats-origin': 'stats',
-            'x-nba-stats-token': 'true'
+            'x-nba-stats-token': 'true',
+            'Sec-Ch-Ua': '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
+            'Sec-Ch-Ua-Mobile': '?0',
+            'Sec-Ch-Ua-Platform': '"Windows"',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-site',
         }
 
         stats_dict = {}
         try:
             print("Fetching NBA advanced stats via direct API...")
-            response = requests.get(api_url, headers=headers, timeout=15)
+            # Increased timeout to 45 seconds to handle cloud runner latency
+            response = requests.get(api_url, headers=headers, timeout=45)
             
             if response.status_code != 200:
                 print(f"API request failed with status code {response.status_code}")
@@ -104,16 +112,10 @@ class NbaStats:
             headers_list = result_sets[0].get('headers', [])
             row_set = result_sets[0].get('rowSet', [])
 
-            # Lowercase headers to match your schema keys ('offrtg', 'defrtg', etc.)
-            # The API returns UPPERCASE header names like OFF_RATING, DEF_RATING, NET_RATING, etc.
-            # We map them to lowercase equivalents or keep the exact names your DB expects.
             lower_headers = [h.lower() for h in headers_list]
-
-            # Find column indexes
             team_idx = lower_headers.index('team_name')
 
             for row in row_set:
-                # Extract team slug name matching your format (e.g. "Boston Celtics" -> "celtics")
                 full_team_name = str(row[team_idx])
                 team_name = full_team_name.split(' ')[-1].lower()
 
@@ -121,8 +123,6 @@ class NbaStats:
                 for i, header in enumerate(lower_headers):
                     if i == team_idx:
                         continue
-                    # Map API metric names to your expected dictionary keys
-                    # e.g., off_rating -> offrtg, def_rating -> defrtg, net_rating -> netrtg
                     clean_key = header.replace('_rating', 'rtg').replace('_', '')
                     team_stats[clean_key] = str(row[i])
 

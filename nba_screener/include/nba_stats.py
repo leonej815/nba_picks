@@ -28,7 +28,7 @@ class NbaStats:
         WebDriverWait(self.web_driver, 15).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "table"))
         )
-        time.sleep(5)
+        time.sleep(30)
 
         # extract table headings
         heading_els = self.web_driver.find_elements(By.CSS_SELECTOR, heading_selector)

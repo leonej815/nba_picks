@@ -38,11 +38,11 @@ jobs:
           PYTHONUNBUFFERED: "1"
 
       - name: Commit and Push changes
-              run: |
-                git config --global user.name "GitHub Action"
-                git config --global user.email "action@github.com"
-                git status
-                git add -f sqlite/data.sqlite
-                git add -f csv/data.csv
-                git commit -m "Automated data update" || exit 0
-                git push
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git status
+          git add -f sqlite/data.sqlite
+          git add -f csv/data.csv
+          git commit -m "Automated data update" || exit 0
+          git push

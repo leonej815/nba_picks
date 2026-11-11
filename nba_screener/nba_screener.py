@@ -43,12 +43,12 @@ def nba_screener():
 
     # retrieve today's line data and either insert or update into the database
     line_data = espn.get_line_data(date_today)
-    print(f"Line data:\n{line_data}\n\n")
+    print(f"Line data:\n{line_data}\n")
     db.insert_line_data(date_today, line_data)
     
     # get stats and update records that need stats for today's date
     stats_dict = nbaDotCom.get_stats()
-    print(f"Stats:\n{stats_dict}\n\n")
+    print(f"Stats:\n{stats_dict}\n")
     db.insert_stats(date_today, stats_dict)
     
     # select all data and output to csv
@@ -56,21 +56,43 @@ def nba_screener():
     df.to_csv(csv_path, index=False)
 
 
+# def get_webdriver():
+#     options = Options()
+#     options.add_argument("--headless=new") # modern headless mode
+#     options.add_argument("--disable-gpu") # in case Github Actions Linux machines don't have a GPU
+#     options.add_argument("--no-sandbox") # essential for server environments
+#     options.add_argument("--disable-dev-shm-usage") # overcomes limited resource errors
+#     options.add_argument("--window-size=1920,1080") # ensures responsive sites load correctly
+    
+#     # crucial flags to prevent Cloudflare/bot detection in headless mode:
+#     options.add_argument("--disable-blink-features=AutomationControlled")
+#     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+    
+#     driver = webdriver.Chrome(options=options)
+#     return driver
+
 def get_webdriver():
     options = Options()
-    options.add_argument("--headless=new") # modern headless mode
-    options.add_argument("--disable-gpu") # in case Github Actions Linux machines don't have a GPU
-    options.add_argument("--no-sandbox") # essential for server environments
-    options.add_argument("--disable-dev-shm-usage") # overcomes limited resource errors
-    options.add_argument("--window-size=1920,1080") # ensures responsive sites load correctly
+    options.add_argument("--headless=new")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--window-size=1920,1080")
     
-    # crucial flags to prevent Cloudflare/bot detection in headless mode:
+    # Critical flags to prevent bot detection in headless mode:
     options.add_argument("--disable-blink-features=AutomationControlled")
-    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36")
+    
+    # Hide automation indicators
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option('useAutomationExtension', False)
     
     driver = webdriver.Chrome(options=options)
+    
+    # Execute CDP command to further mask automation
+    driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+    
     return driver
-
 
 def get_date_str():
     """Returns the current date or the previous date if it is before 4 am because games might be going on past midnight. Uses EST time zone.

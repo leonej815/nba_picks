@@ -1,4 +1,5 @@
 from selenium.webdriver.common.by import By
+import time
 
 class EspnScoreboard:
     """Class to manage the retrieval of data from the NBA scoreboard page at espn.com
@@ -52,7 +53,7 @@ class EspnScoreboard:
         progress_selector = '.ScoreCell__Time'
 
         self.open_scoreboard(date)
-
+        time.sleep(5)
         scoreboard_els = self.web_driver.find_elements(By.CSS_SELECTOR, scoreboard_selector)
 
         score_data = []
@@ -97,6 +98,7 @@ class EspnScoreboard:
         record_selector = '.ScoreboardScoreCell__Record'
 
         self.open_scoreboard(date)
+        time.sleep(5)
         scoreboard_els = self.web_driver.find_elements(By.CSS_SELECTOR, scoreboard_selector)
 
         game_data_arr = []

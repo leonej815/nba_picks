@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import time
 
 class NbaStats:
     """Class that manages NBA team stats collecting from nba.com
@@ -27,6 +28,7 @@ class NbaStats:
         WebDriverWait(self.web_driver, 15).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "table"))
         )
+        time.sleep(5)
 
         # extract table headings
         heading_els = self.web_driver.find_elements(By.CSS_SELECTOR, heading_selector)

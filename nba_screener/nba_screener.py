@@ -33,7 +33,7 @@ def nba_screener():
     webdriver = get_webdriver()
     db = DB(db_path)
     espn = EspnScoreboard(webdriver)
-    nbaDotCom = NbaStats(webdriver)
+    NbaDotCom = NbaStats(webdriver)
 
     # get list of dates that have games that need the scores filled in and add scores
     dates_that_need_scores = db.get_dates_that_need_scores()
@@ -47,7 +47,7 @@ def nba_screener():
     db.insert_line_data(date_today, line_data)
     
     # get stats and update records that need stats for today's date
-    stats_dict = nbaDotCom.get_stats()
+    stats_dict = NbaDotCom.get_stats()
     print(f"Stats:\n{stats_dict}\n")
     db.insert_stats(date_today, stats_dict)
     
@@ -58,7 +58,7 @@ def nba_screener():
 
 def get_webdriver():
     options = Options()
-    options.add_argument("--headless=new")
+    # options.add_argument("--headless=new")
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")

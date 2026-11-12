@@ -8,7 +8,7 @@ from selenium.webdriver.chrome.options import Options
 import sys
 import os
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv(override=True)
 
 current_dir = Path(__file__).resolve().parent
 root_dir = current_dir.parent

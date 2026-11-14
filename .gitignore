@@ -5,3 +5,4 @@ data.db-*
 data_test.sqlite*
 data_test.csv
 run_pipeline.py
+.github/

@@ -37,6 +37,7 @@ class DB:
         for game_score_dict in game_scores_list:
             sql = "UPDATE nba_game_data SET away_score=?, home_score=? WHERE away=? AND home=? AND date=?"
             vals = (game_score_dict["away_score"], game_score_dict["home_score"], game_score_dict["away"], game_score_dict["home"], date)
+
             self.execute_write(sql, vals)
 
     def insert_line_data(self, date, line_data_list):

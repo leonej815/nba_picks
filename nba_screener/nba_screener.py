@@ -38,17 +38,17 @@ def nba_screener():
     # get list of dates that have games that need the scores filled in and add scores
     dates_that_need_scores = db.get_dates_that_need_scores()
     for date in dates_that_need_scores:
-        scores_data_list = espn.get_scores(dates_that_need_scores)
+        scores_data_list = espn.get_scores(date)
         db.update_scores(date, scores_data_list)
 
     # retrieve today's line data and either insert or update into the database
     line_data = espn.get_line_data(date_today)
-    print(f"Line data:\n{line_data}\n")
+    # print(f"Line data:\n{line_data}\n")
     db.insert_line_data(date_today, line_data)
     
     # get stats and update records that need stats for today's date
     stats_dict = NbaDotCom.get_stats()
-    print(f"Stats:\n{stats_dict}\n")
+    # print(f"Stats:\n{stats_dict}\n")
     db.insert_stats(date_today, stats_dict)
     
     # select all data and output to csv
